@@ -17,6 +17,7 @@
   "scripts": {
     "dev": "concurrently \"cd backend && nodemon index.js\" \"cd frontend && npx expo start\"",
     "dev:ios": "concurrently \"cd backend && nodemon index.js\" \"cd frontend && npx expo start --ios\"",
+    "frontend": "cd frontend && npx expo start --ios",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
