@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Octicons from '@expo/vector-icons/Octicons';
 
 import { COLORS } from "@/costants/colors";
-import { PADDING, SHADOW } from "@/costants/styles";
+import { PADDING, SHADOW, SHADOW_PINK_0 } from "@/costants/styles";
 import { useState } from "react";
 
 export enum AutoCapitalize {
@@ -32,7 +32,7 @@ export default function TextInputComponent({
   const [showSecureText, setShowSecureText] = useState(true);
 
   const onChangeTextHandler = (input: string) => {
-      onChangeText(input);
+    onChangeText(input);
   };
 
   const toggleSecureText = () => {
@@ -62,10 +62,15 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     margin: 5,
     borderWidth: 1,
+    // borderColor: 'rgba(250, 125, 125, 1)',
+    // borderBottomWidth: 2,
+    // borderTopWidth: 1,
+    // borderBottomColor: 'rgba(158, 23, 23, 1)',
     backgroundColor: "white",
     overflow: "hidden",
     position: "relative",
     flexDirection: "row",
+    ...SHADOW,
   },
   labelWrapper: {
     position: "relative",
@@ -74,7 +79,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: PADDING.SMALL_PADDING,
     padding: 10,
-    flexDirection: "row"
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: 'rgba(250, 125, 125, 1)',
+    borderBottomWidth: 2,
+    borderTopWidth: 1,
+    borderBottomColor: 'rgba(158, 23, 23, 1)',
   },
   label: {
     fontSize: 16,
