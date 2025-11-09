@@ -82,8 +82,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
-    maxWidth: "45%",
     flex: 1,
+    alignSelf: "stretch",
+    textAlign: "right",
+    marginRight: 10
   },
   icon: {
     marginLeft: 5
