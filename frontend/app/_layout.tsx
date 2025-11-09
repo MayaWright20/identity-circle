@@ -21,7 +21,7 @@ export default function RootLayout() {
 
 function RootNavigator() {
   const authCTATitle = useStore((state: any) => state.authCTATitle);
-  const isAuthScreen = useStore((state: any)=> state.isAuthScreen);
+  const isAuthScreen = useStore((state: any) => state.isAuthScreen);
 
   const authBtnHandler = () => {
     authHandler("false", "/auth");
@@ -50,7 +50,12 @@ function RootNavigator() {
           <Stack.Screen name="(app)" />
         </Stack.Protected>
       </Stack>
-      <SafeAreaView style={[styles.safeAreaView, {backgroundColor: isAuthScreen ? COLORS.CREAM_0 : COLORS.RED_0}]}>
+      <SafeAreaView
+        style={[
+          styles.safeAreaView,
+          { backgroundColor: isAuthScreen ? COLORS.CREAM_0 : COLORS.RED_0 },
+        ]}
+      >
         <CTA onPress={authBtnHandler} title={authCTATitle} style={styles.btn} />
       </SafeAreaView>
     </>
