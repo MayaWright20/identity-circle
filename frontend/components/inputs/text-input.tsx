@@ -1,7 +1,9 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Octicons from '@expo/vector-icons/Octicons';
 
 import { COLORS } from "@/costants/colors";
 import { PADDING } from "@/costants/styles";
+import { useState } from "react";
 
 export enum AutoCapitalize {
   none = 'none', 
@@ -16,6 +18,7 @@ interface Props {
   label: string;
   onChangeText: (input: string) => void;
   autoCapitalize?: AutoCapitalize;
+  secureTextEntry?: boolean
 }
 
 export default function TextInputComponent({
@@ -23,21 +26,31 @@ export default function TextInputComponent({
   color = "white",
   label,
   onChangeText,
-  autoCapitalize
+  autoCapitalize,
+  secureTextEntry
 }: Props) {
+  const [showSecureText, setShowSecureText] = useState(true);
+
   const onChangeTextHandler = (input: string) => {
       onChangeText(input);
   };
 
+  const toggleSecureText = () => {
+    setShowSecureText(prev => !prev);
+  }
+
   return (
     <View style={[styles.container, { borderColor: backgroundColor }]}>
-      <View style={[styles.labelWrapper, { backgroundColor }]}>
+      <Pressable onPress={secureTextEntry ? toggleSecureText : undefined} style={[styles.labelWrapper, { backgroundColor }]}>
         <Text style={[styles.label, { color }]}>{label}</Text>
-      </View>
+        {secureTextEntry && <Octicons style={styles.icon} name={showSecureText ? "eye-closed" : "eye"} size={20} color={color} />}
+      </Pressable>
       <TextInput
         onChangeText={onChangeTextHandler}
         style={[styles.textInput, { color: backgroundColor }]}
         autoCapitalize={autoCapitalize}
+        secureTextEntry={secureTextEntry && showSecureText}
+        cursorColor={backgroundColor}
       />
     </View>
   );
@@ -61,6 +74,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: PADDING.SMALL_PADDING,
     padding: 10,
+    flexDirection: "row"
   },
   label: {
     fontSize: 16,
@@ -71,4 +85,7 @@ const styles = StyleSheet.create({
     maxWidth: "45%",
     flex: 1,
   },
+  icon: {
+    marginLeft: 5
+  }
 });

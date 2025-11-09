@@ -25,6 +25,7 @@ interface AuthItem {
   label: string;
   id: string;
   autoCapitalize: AutoCapitalize;
+  secureTextEntry?: boolean;
 }
 
 type AUTH_ITEM = Record<string, AuthItem[]>;
@@ -40,7 +41,8 @@ const AUTH_ITEMS: AUTH_ITEM = {
     {
       id: "password",
       label: "Password",
-      autoCapitalize: AutoCapitalize.none
+      autoCapitalize: AutoCapitalize.none,
+      secureTextEntry: true
     },
   ],
   false: [
@@ -63,7 +65,8 @@ const AUTH_ITEMS: AUTH_ITEM = {
     {
       id: "password",
       label: "Password",
-      autoCapitalize: AutoCapitalize.none
+      autoCapitalize: AutoCapitalize.none,
+      secureTextEntry: true
     },
   ],
 };
@@ -100,6 +103,7 @@ export default function SignIn() {
                 key={index}
                 backgroundColor={COLORS.RED_0}
                 label={item.label}
+                secureTextEntry={item.secureTextEntry}
               />
             );
           })}

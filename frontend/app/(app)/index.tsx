@@ -10,7 +10,7 @@ export default function Index() {
       <Text
         onPress={() => {
           // The guard in `RootNavigator` redirects back to the sign-in screen.
-        //   signOut();
+          // signOut();
         }}>
         Sign Out
       </Text>
