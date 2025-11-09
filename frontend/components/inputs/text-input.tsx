@@ -7,19 +7,35 @@ interface Props {
   backgroundColor?: string;
   color?: string;
   label: string;
-} 
+  onChangeText: (input: string) => void;
+  isLowerCase: boolean;
+}
 
 export default function TextInputComponent({
   backgroundColor = COLORS.PINK_0,
   color = "white",
   label,
+  onChangeText,
+  isLowerCase
 }: Props) {
+  const onChangeTextHandler = (input: string) => {
+    if(isLowerCase){
+      onChangeText(input.toLowerCase());
+    }else{
+      onChangeText(input);
+    }
+    
+  };
+
   return (
     <View style={[styles.container, { borderColor: backgroundColor }]}>
       <View style={[styles.labelWrapper, { backgroundColor }]}>
         <Text style={[styles.label, { color }]}>{label}</Text>
       </View>
-      <TextInput style={[styles.textInput, {color: backgroundColor}]} />
+      <TextInput
+        onChangeText={onChangeTextHandler}
+        style={[styles.textInput, { color: backgroundColor }]}
+      />
     </View>
   );
 }
@@ -33,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     overflow: "hidden",
     position: "relative",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   labelWrapper: {
     position: "relative",
@@ -46,10 +62,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   textInput: {
-    maxWidth: '45%',
+    maxWidth: "45%",
     flex: 1,
   },
 });
