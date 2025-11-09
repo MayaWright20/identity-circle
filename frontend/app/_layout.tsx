@@ -22,9 +22,14 @@ export default function RootLayout() {
 function RootNavigator() {
   const authCTATitle = useStore((state: any) => state.authCTATitle);
   const isAuthScreen = useStore((state: any) => state.isAuthScreen);
+  const authForm = useStore((state: any) => state.authForm);
 
   const authBtnHandler = () => {
-    authHandler("false", "/auth");
+    if(!isAuthScreen){
+      authHandler("false", "/auth");
+    }else{
+      console.log("form", authForm)
+    }
   };
 
   return (
@@ -56,7 +61,7 @@ function RootNavigator() {
           { backgroundColor: isAuthScreen ? COLORS.CREAM_0 : COLORS.RED_0 },
         ]}
       >
-        <CTA onPress={authBtnHandler} title={authCTATitle} style={styles.btn} />
+        <CTA onPress={authBtnHandler} title={authCTATitle} />
       </SafeAreaView>
     </>
   );
@@ -65,8 +70,5 @@ function RootNavigator() {
 const styles = StyleSheet.create({
   safeAreaView: {
     paddingTop: "-100%",
-  },
-  btn: {
-    backgroundColor: "green",
   },
 });

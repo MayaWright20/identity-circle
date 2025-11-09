@@ -4,22 +4,15 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import CTA from "@/components/buttons/cta";
-import TextInputComponent, { AutoCapitalize } from "@/components/inputs/text-input";
+import TextInputComponent, {
+  AutoCapitalize,
+} from "@/components/inputs/text-input";
 
 import { COLORS } from "@/costants/colors";
 import { useStorageState, useStore } from "@/store/store";
-import { AUTH_ROUTE } from "@/types";
+import { AUTH_ROUTE, AuthSignupForm } from "@/types";
 
 // import { useSession } from '../ctx';
-interface AuthForm {
-  username: string;
-  password: string;
-}
-
-interface AuthSignupForm extends AuthForm {
-  name: string;
-  email: string;
-}
 
 interface AuthItem {
   label: string;
@@ -36,13 +29,13 @@ const AUTH_ITEMS: AUTH_ITEM = {
     {
       id: "username",
       label: "Username | Email",
-      autoCapitalize: AutoCapitalize.none
+      autoCapitalize: AutoCapitalize.none,
     },
     {
       id: "password",
       label: "Password",
       autoCapitalize: AutoCapitalize.none,
-      secureTextEntry: true
+      secureTextEntry: true,
     },
   ],
   false: [
@@ -50,53 +43,51 @@ const AUTH_ITEMS: AUTH_ITEM = {
     {
       id: "name",
       label: "Name",
-      autoCapitalize: AutoCapitalize.words
+      autoCapitalize: AutoCapitalize.words,
     },
     {
       id: "username",
       label: "Username",
-      autoCapitalize: AutoCapitalize.none
+      autoCapitalize: AutoCapitalize.none,
     },
     {
       id: "email",
       label: "Email",
-      autoCapitalize: AutoCapitalize.none
+      autoCapitalize: AutoCapitalize.none,
     },
     {
       id: "password",
       label: "Password",
       autoCapitalize: AutoCapitalize.none,
-      secureTextEntry: true
+      secureTextEntry: true,
     },
   ],
 };
 
 export default function SignIn() {
   //   const { signIn } = useSession();
-  const [formData, setFormData] = useState<AuthSignupForm>({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-  });
+  // const [formData, setFormData] = useState<AuthSignupForm>({
+  //   name: "",
+  //   username: "",
+  //   email: "",
+  //   password: "",
+  // });
   const [storage] = useStorageState(AUTH_ROUTE);
   const formItems = useMemo(() => AUTH_ITEMS[`${storage[1]}`], [storage]);
-  const setAuthCTATitle = useStore((state: any)=> state.setAuthCTATitle);
-  const setIsAuthScreen = useStore((state: any)=> state.setIsAuthScreen);
+  const setAuthCTATitle = useStore((state: any) => state.setAuthCTATitle);
+  const setIsAuthScreen = useStore((state: any) => state.setIsAuthScreen);
+  const authForm = useStore((state: any) => state.authForm);
+  const setAuthForm = useStore((state: any) => state.setAuthForm);
 
   const backCta = () => {
-    setAuthCTATitle("Sign up")
+    setAuthCTATitle("Sign up");
     router.navigate("/");
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     setAuthCTATitle(storage[1] === "true" ? "Login" : "Sign up");
     setIsAuthScreen(true);
-  },[storage])
-
-  const authHandler = async() => {
-    console.log("formData", formData)
-  };
+  }, [storage]);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -107,7 +98,12 @@ export default function SignIn() {
             return (
               <TextInputComponent
                 autoCapitalize={item.autoCapitalize}
-                onChangeText={(value) => setFormData(prev => ({...prev, [item.id]: value }))}
+                onChangeText={(value) =>
+                  setAuthForm({
+                    ...authForm,
+                    [item.id]: value,
+                  })
+                }
                 key={index}
                 backgroundColor={COLORS.RED_0}
                 label={item.label}
