@@ -15,7 +15,7 @@ interface Props {
   color?: string;
   label: string;
   onChangeText: (input: string) => void;
-  autoCapitalize?: AutoCapitalize | undefined;
+  autoCapitalize?: AutoCapitalize;
 }
 
 export default function TextInputComponent({
