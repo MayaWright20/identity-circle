@@ -9,6 +9,8 @@ import { authHandler } from "@/utils/auth";
 import { AUTH_FORM, useStore } from "@/store/store";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useEffect, useRef } from "react";
+import { COLORS } from "@/costants/colors";
+import { SHADOW } from "@/costants/styles";
 
 const videoSource = require("../assets/videos/Fuzz.mp4");
 
@@ -103,12 +105,22 @@ function RootNavigator() {
             <CTA
               title={"Log in"}
               onPress={() => authHandler("true", "/auth")}
+              style={!isAuthScreen && styles.cta}
             />
           </SafeAreaView>
         </>
       )}
-      <SafeAreaView style={styles.authBtnSafeAreaView}>
-        <CTA onPress={authBtnHandler} title={authCTATitle} />
+      <SafeAreaView
+        style={[
+          styles.authBtnSafeAreaView,
+          { backgroundColor: isAuthScreen && COLORS.CREAM_0 },
+        ]}
+      >
+        <CTA
+          style={!isAuthScreen && styles.cta}
+          onPress={authBtnHandler}
+          title={authCTATitle}
+        />
       </SafeAreaView>
     </>
   );
@@ -131,5 +143,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     width: "100%",
     height: "100%",
+  },
+  cta: {
+    ...SHADOW,
   },
 });

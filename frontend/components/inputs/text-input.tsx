@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Octicons from '@expo/vector-icons/Octicons';
 
 import { COLORS } from "@/costants/colors";
-import { PADDING } from "@/costants/styles";
+import { PADDING, SHADOW } from "@/costants/styles";
 import { useState } from "react";
 
 export enum AutoCapitalize {
