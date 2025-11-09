@@ -9,8 +9,6 @@ interface StoreState {
   setAuthCTATitle: (title: string) => void;
   isAuthScreen: boolean;
   setAuthScreen: (isAuthScreen: boolean) => void;
-  authRoute: boolean;
-  setAuthRoute: (isLogin: boolean) => void;
 }
 
 export const useStore = create<StoreState | any>((set, get) => ({
@@ -18,8 +16,6 @@ export const useStore = create<StoreState | any>((set, get) => ({
   setAuthCTATitle: (title: string) => set(() => ({ authCTATitle: title })),
   isAuthScreen: false,
   setIsAuthScreen: (isAuthScreen: boolean) => set(() => ({ isAuthScreen })),
-  authRoute: false,
-  setAuthRoute: (authRoute: boolean) => set(() => ({ authRoute })),
 }));
 
 
