@@ -20,6 +20,8 @@ interface Props {
   onChangeText: (input: string) => void;
   autoCapitalize?: AutoCapitalize;
   secureTextEntry?: boolean;
+  errorMessage?: string;
+  showErrorMessage?: boolean;
 }
 
 export default function TextInputComponent({
@@ -29,6 +31,8 @@ export default function TextInputComponent({
   onChangeText,
   autoCapitalize,
   secureTextEntry,
+  errorMessage,
+  showErrorMessage,
 }: Props) {
   const [showSecureText, setShowSecureText] = useState(true);
 
@@ -42,28 +46,31 @@ export default function TextInputComponent({
   };
 
   return (
-    <View style={[styles.container, { borderColor: backgroundColor }]}>
-      <Pressable
-        onPress={secureTextEntry ? toggleSecureText : undefined}
-        style={[styles.labelWrapper, { backgroundColor }]}>
-        <Text style={[styles.label, { color }]}>{label}</Text>
-        {secureTextEntry && (
-          <Octicons
-            style={styles.icon}
-            name={showSecureText ? 'eye-closed' : 'eye'}
-            size={20}
-            color={color}
-          />
-        )}
-      </Pressable>
-      <TextInput
-        onChangeText={onChangeTextHandler}
-        style={[styles.textInput, { color: backgroundColor }]}
-        autoCapitalize={autoCapitalize}
-        secureTextEntry={secureTextEntry && showSecureText}
-        cursorColor={backgroundColor}
-      />
-    </View>
+    <>
+      <View style={[styles.container, { borderColor: backgroundColor }]}>
+        <Pressable
+          onPress={secureTextEntry ? toggleSecureText : undefined}
+          style={[styles.labelWrapper, { backgroundColor }]}>
+          <Text style={[styles.label, { color }]}>{label}</Text>
+          {secureTextEntry && (
+            <Octicons
+              style={styles.icon}
+              name={showSecureText ? 'eye-closed' : 'eye'}
+              size={20}
+              color={color}
+            />
+          )}
+        </Pressable>
+        <TextInput
+          onChangeText={onChangeTextHandler}
+          style={[styles.textInput, { color: backgroundColor }]}
+          autoCapitalize={autoCapitalize}
+          secureTextEntry={secureTextEntry && showSecureText}
+          cursorColor={backgroundColor}
+        />
+      </View>
+      <Text style={[styles.errorLabel, { color: backgroundColor }]}>{errorMessage}</Text>
+    </>
   );
 }
 
@@ -77,6 +84,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     flexDirection: 'row',
+    marginBottom: 1,
   },
   labelWrapper: {
     position: 'relative',
@@ -91,6 +99,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  errorLabel: {
+    fontSize: 12,
+    textAlign: 'right',
+    marginRight: 20,
+    textTransform: 'capitalize',
+    marginBottom: 2,
   },
   textInput: {
     flex: 1,
