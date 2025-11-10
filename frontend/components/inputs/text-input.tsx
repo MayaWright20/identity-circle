@@ -1,14 +1,15 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import Octicons from '@expo/vector-icons/Octicons';
 
-import { COLORS } from "@/costants/colors";
-import { PADDING} from "@/costants/styles";
-import { useState } from "react";
+import { COLORS } from '@/costants/colors';
+import { PADDING } from '@/costants/styles';
+import { useState } from 'react';
 
 export enum AutoCapitalize {
-  none = 'none', 
-  sentences = 'sentences', 
-  words = 'words', 
+  none = 'none',
+  sentences = 'sentences',
+  words = 'words',
   characters = 'characters',
 }
 
@@ -18,32 +19,42 @@ interface Props {
   label: string;
   onChangeText: (input: string) => void;
   autoCapitalize?: AutoCapitalize;
-  secureTextEntry?: boolean
+  secureTextEntry?: boolean;
 }
 
 export default function TextInputComponent({
   backgroundColor = COLORS.PINK_0,
-  color = "white",
+  color = 'white',
   label,
   onChangeText,
   autoCapitalize,
-  secureTextEntry
+  secureTextEntry,
 }: Props) {
   const [showSecureText, setShowSecureText] = useState(true);
 
   const onChangeTextHandler = (input: string) => {
-      onChangeText(input);
+    onChangeText(input);
   };
 
   const toggleSecureText = () => {
-    setShowSecureText(prev => !prev);
-  }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setShowSecureText((prev) => !prev);
+  };
 
   return (
     <View style={[styles.container, { borderColor: backgroundColor }]}>
-      <Pressable onPress={secureTextEntry ? toggleSecureText : undefined} style={[styles.labelWrapper, { backgroundColor }]}>
+      <Pressable
+        onPress={secureTextEntry ? toggleSecureText : undefined}
+        style={[styles.labelWrapper, { backgroundColor }]}>
         <Text style={[styles.label, { color }]}>{label}</Text>
-        {secureTextEntry && <Octicons style={styles.icon} name={showSecureText ? "eye-closed" : "eye"} size={20} color={color} />}
+        {secureTextEntry && (
+          <Octicons
+            style={styles.icon}
+            name={showSecureText ? 'eye-closed' : 'eye'}
+            size={20}
+            color={color}
+          />
+        )}
       </Pressable>
       <TextInput
         onChangeText={onChangeTextHandler}
@@ -62,32 +73,32 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     margin: 5,
     borderWidth: 1,
-    backgroundColor: "white",
-    overflow: "hidden",
-    position: "relative",
-    flexDirection: "row",
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    position: 'relative',
+    flexDirection: 'row',
   },
   labelWrapper: {
-    position: "relative",
-    alignSelf: "flex-start",
+    position: 'relative',
+    alignSelf: 'flex-start',
     marginHorizontal: 5,
     borderRadius: 50,
     paddingHorizontal: PADDING.SMALL_PADDING,
     padding: 10,
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   textInput: {
     flex: 1,
-    alignSelf: "stretch",
-    textAlign: "right",
-    marginRight: 20
+    alignSelf: 'stretch',
+    textAlign: 'right',
+    marginRight: 20,
   },
   icon: {
-    marginLeft: 5
-  }
+    marginLeft: 5,
+  },
 });

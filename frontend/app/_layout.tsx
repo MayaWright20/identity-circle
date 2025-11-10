@@ -10,7 +10,7 @@ import { AUTH_FORM, useStore } from '@/store/store';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useRef } from 'react';
 import { COLORS } from '@/costants/colors';
-import { SHADOW, SHADOW_PINK_0 } from '@/costants/styles';
+import { SHADOW } from '@/costants/styles';
 
 const videoSource = require('../assets/videos/Fuzz.mp4');
 
@@ -151,6 +151,5 @@ const styles = StyleSheet.create({
   },
   cta: {
     ...SHADOW,
-    ...SHADOW_PINK_0,
   },
 });

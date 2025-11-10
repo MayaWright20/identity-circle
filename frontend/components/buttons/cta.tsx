@@ -1,14 +1,8 @@
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native"; 
+import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
-import { COLORS } from "@/costants/colors";
-import { PADDING } from "@/costants/styles";
+import { COLORS } from '@/costants/colors';
+import { PADDING } from '@/costants/styles';
 
 interface Props {
   title: string;
@@ -28,11 +22,9 @@ export default function CTA({
   isSmall,
 }: Props) {
   const onPressHandler = () => {
-    Haptics.notificationAsync(
-      Haptics.NotificationFeedbackType.Success
-    )
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onPress();
-  }
+  };
   return (
     <TouchableOpacity
       onPress={onPressHandler}
@@ -41,10 +33,9 @@ export default function CTA({
         style,
         {
           backgroundColor,
-          paddingHorizontal: isSmall ? PADDING.SMALL_PADDING : "auto",
+          paddingHorizontal: isSmall ? PADDING.SMALL_PADDING : 'auto',
         },
-      ]}
-    >
+      ]}>
       <Text style={[styles.title, { color: color }]}>{title}</Text>
     </TouchableOpacity>
   );
@@ -57,8 +48,8 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   title: {
-    textAlign: "center",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 18,
   },
 });
