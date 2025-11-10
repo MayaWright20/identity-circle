@@ -145,14 +145,6 @@ const styles = StyleSheet.create({
   pictureContainer: {
     ...StyleSheet.absoluteFillObject,
   },
-  container: {
-    flex: 1,
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    height: '100%',
-  },
   cta: {
     ...SHADOW,
   },
