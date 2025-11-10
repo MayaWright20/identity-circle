@@ -1,18 +1,18 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
 
 // import { SessionProvider } from '../ctx';
-import { SplashScreenController } from "@/components/splash-screen";
-import CTA from "@/components/buttons/cta";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
-import { authHandler } from "@/utils/auth";
-import { AUTH_FORM, useStore } from "@/store/store";
-import { useVideoPlayer, VideoView } from "expo-video";
-import { useEffect, useRef } from "react";
-import { COLORS } from "@/costants/colors";
-import { SHADOW, SHADOW_PINK_0 } from "@/costants/styles";
+import { SplashScreenController } from '@/components/splash-screen';
+import CTA from '@/components/buttons/cta';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { authHandler } from '@/utils/auth';
+import { AUTH_FORM, useStore } from '@/store/store';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEffect, useRef } from 'react';
+import { COLORS } from '@/costants/colors';
+import { SHADOW, SHADOW_PINK_0 } from '@/costants/styles';
 
-const videoSource = require("../assets/videos/Fuzz.mp4");
+const videoSource = require('../assets/videos/Fuzz.mp4');
 
 export default function RootLayout() {
   return (
@@ -34,10 +34,10 @@ function RootNavigator() {
 
   const authBtnHandler = () => {
     if (!isAuthScreen) {
-      authHandler("false", "/auth");
+      authHandler('false', '/auth');
       setIsAuthScreen(false);
     } else {
-      console.log("form", authForm);
+      console.log('form', authForm);
     }
   };
 
@@ -46,18 +46,18 @@ function RootNavigator() {
     player.play();
   });
 
-  const handleVideoEnd = () => {
-    if (isReversed.current) {
-      player.currentTime = 0;
-      player.playbackRate = 1;
-      isReversed.current = false;
-    } else {
-      player.currentTime = player.duration || 0;
-      player.playbackRate = -1;
-      isReversed.current = true;
-    }
-    player.play();
-  };
+  // const handleVideoEnd = () => {
+  //   if (isReversed.current) {
+  //     player.currentTime = 0;
+  //     player.playbackRate = 1;
+  //     isReversed.current = false;
+  //   } else {
+  //     player.currentTime = player.duration || 0;
+  //     player.playbackRate = -1;
+  //     isReversed.current = true;
+  //   }
+  //   player.play();
+  // };
 
   useEffect(() => {
     setIsAuthScreen(false);
@@ -65,7 +65,21 @@ function RootNavigator() {
   }, [setIsAuthScreen, setAuthForm]);
 
   useEffect(() => {
-    const subscription = player.addListener("playToEnd", handleVideoEnd);
+    const handleVideoEnd = () => {
+      if (isReversed.current) {
+        player.currentTime = 0;
+        player.playbackRate = 1;
+        isReversed.current = false;
+      } else {
+        player.currentTime = player.duration || 0;
+        player.playbackRate = -1;
+        isReversed.current = true;
+      }
+      player.play();
+    };
+
+    const subscription = player.addListener('playToEnd', handleVideoEnd);
+
     return () => subscription?.remove();
   }, [player]);
 
@@ -77,14 +91,14 @@ function RootNavigator() {
             name="index"
             options={{
               headerShown: false,
-              animation: "slide_from_left",
+              animation: 'slide_from_left',
             }}
           />
           <Stack.Screen
             name="auth"
             options={{
               headerShown: false,
-              animation: "slide_from_bottom",
+              animation: 'slide_from_bottom',
             }}
           />
         </Stack.Protected>
@@ -102,24 +116,16 @@ function RootNavigator() {
           />
           <SafeAreaView style={styles.safeAreaView}>
             <CTA
-              title={"Log in"}
-              onPress={() => authHandler("true", "/auth")}
+              title={'Log in'}
+              onPress={() => authHandler('true', '/auth')}
               style={!isAuthScreen && styles.cta}
             />
           </SafeAreaView>
         </>
       )}
       <SafeAreaView
-        style={[
-          styles.authBtnSafeAreaView,
-          { backgroundColor: isAuthScreen && COLORS.CREAM_0 },
-        ]}
-      >
-        <CTA
-          style={!isAuthScreen && styles.cta}
-          onPress={authBtnHandler}
-          title={authCTATitle}
-        />
+        style={[styles.authBtnSafeAreaView, { backgroundColor: isAuthScreen && COLORS.CREAM_0 }]}>
+        <CTA style={!isAuthScreen && styles.cta} onPress={authBtnHandler} title={authCTATitle} />
       </SafeAreaView>
     </>
   );
@@ -127,10 +133,10 @@ function RootNavigator() {
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    paddingBottom: "-100%",
+    paddingBottom: '-100%',
   },
   authBtnSafeAreaView: {
-    paddingTop: "-100%",
+    paddingTop: '-100%',
   },
   pictureContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -140,11 +146,11 @@ const styles = StyleSheet.create({
   },
   image: {
     ...StyleSheet.absoluteFillObject,
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   cta: {
     ...SHADOW,
-    ...SHADOW_PINK_0
+    ...SHADOW_PINK_0,
   },
 });

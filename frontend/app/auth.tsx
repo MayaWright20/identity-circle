@@ -1,16 +1,14 @@
-import { router } from "expo-router";
-import { useEffect, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from 'expo-router';
+import { useEffect, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import CTA from "@/components/buttons/cta";
-import  TextInputComponent,{
-  AutoCapitalize,
-} from "@/components/inputs/text-input";
+import CTA from '@/components/buttons/cta';
+import TextInputComponent, { AutoCapitalize } from '@/components/inputs/text-input';
 
-import { COLORS } from "@/costants/colors";
-import { useStorageState, useStore } from "@/store/store";
-import { AUTH_ROUTE } from "@/types";
+import { COLORS } from '@/costants/colors';
+import { useStorageState, useStore } from '@/store/store';
+import { AUTH_ROUTE } from '@/types';
 
 // import { useSession } from '../ctx';
 
@@ -27,13 +25,13 @@ const AUTH_ITEMS: AUTH_ITEM = {
   true: [
     // Login
     {
-      id: "username",
-      label: "Username | Email",
+      id: 'username',
+      label: 'Username | Email',
       autoCapitalize: AutoCapitalize.none,
     },
     {
-      id: "password",
-      label: "Password",
+      id: 'password',
+      label: 'Password',
       autoCapitalize: AutoCapitalize.none,
       secureTextEntry: true,
     },
@@ -41,23 +39,23 @@ const AUTH_ITEMS: AUTH_ITEM = {
   false: [
     // Sign up
     {
-      id: "name",
-      label: "Name",
+      id: 'name',
+      label: 'Name',
       autoCapitalize: AutoCapitalize.words,
     },
     {
-      id: "username",
-      label: "Username",
+      id: 'username',
+      label: 'Username',
       autoCapitalize: AutoCapitalize.none,
     },
     {
-      id: "email",
-      label: "Email",
+      id: 'email',
+      label: 'Email',
       autoCapitalize: AutoCapitalize.none,
     },
     {
-      id: "password",
-      label: "Password",
+      id: 'password',
+      label: 'Password',
       autoCapitalize: AutoCapitalize.none,
       secureTextEntry: true,
     },
@@ -72,21 +70,21 @@ export default function SignIn() {
   const setIsAuthScreen = useStore((state: any) => state.setIsAuthScreen);
   const authForm = useStore((state: any) => state.authForm);
   const setAuthForm = useStore((state: any) => state.setAuthForm);
-  
+
   const backCta = () => {
-    setAuthCTATitle("Sign up");
-    setIsAuthScreen(false)
-    router.navigate("/");
+    setAuthCTATitle('Sign up');
+    setIsAuthScreen(false);
+    router.navigate('/');
   };
 
   useEffect(() => {
-    setAuthCTATitle(storage[1] === "true" ? "Login" : "Sign up");
+    setAuthCTATitle(storage[1] === 'true' ? 'Login' : 'Sign up');
     setIsAuthScreen(true);
-  }, [storage]);
+  }, [storage, setAuthCTATitle, setIsAuthScreen]);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <CTA isSmall style={styles.backCTA} title={"Back"} onPress={backCta} />
+      <CTA isSmall style={styles.backCTA} title={'Back'} onPress={backCta} />
       <View style={styles.form}>
         {formItems &&
           formItems.map((item, index) => {
@@ -117,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.CREAM_0,
   },
   backCTA: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
   },
   form: {
     flex: 1,
