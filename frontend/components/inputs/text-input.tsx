@@ -69,7 +69,9 @@ export default function TextInputComponent({
           cursorColor={backgroundColor}
         />
       </View>
-      <Text style={[styles.errorLabel, { color: backgroundColor }]}>{errorMessage}</Text>
+      {showErrorMessage && (
+        <Text style={[styles.errorLabel, { color: backgroundColor }]}>{errorMessage}</Text>
+      )}
     </>
   );
 }
