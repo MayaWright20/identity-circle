@@ -1,24 +1,70 @@
 import { create } from 'zustand';
 import { useEffect, useCallback, useReducer } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { AuthRoutes, AuthSignupForm } from '@/types';
+
+import { AuthRoutes, AutoCapitalize, ErrorStateValue } from '@/types';
+
+import {
+  EMAIL_VALIDATOR,
+  HAS_LOWERCASE,
+  HAS_NUMBER,
+  HAS_SPECIAL_CHAR,
+  HAS_UPPERCASE,
+  MIN_LENGTH_12,
+  NAME_VALIDATOR,
+  USER_NAME_VALIDATOR,
+} from '@/costants/regex';
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
-export const AUTH_FORM: AuthSignupForm = {
-  name: '',
-  username: '',
-  email: '',
-  password: '',
-};
+// Order of AUTH_FORM cannot change see _layout fieldsToValidate function
+export const AUTH_FORM: ErrorStateValue[] = [
+  {
+    id: 'name',
+    label: 'name',
+    value: '',
+    errorMessage: 'name error message',
+    validator: [NAME_VALIDATOR],
+    showErrorMessage: false,
+    autoCapitalize: AutoCapitalize.words,
+  },
+  {
+    id: 'username',
+    label: 'Username',
+    value: '',
+    errorMessage: 'username error message',
+    validator: [USER_NAME_VALIDATOR],
+    showErrorMessage: false,
+    autoCapitalize: AutoCapitalize.none,
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    value: '',
+    errorMessage: 'email error message',
+    validator: [EMAIL_VALIDATOR],
+    showErrorMessage: false,
+    autoCapitalize: AutoCapitalize.none,
+  },
+  {
+    id: 'password',
+    label: 'Password',
+    value: '',
+    errorMessage: 'password error message',
+    validator: [HAS_UPPERCASE, HAS_LOWERCASE, HAS_NUMBER, HAS_SPECIAL_CHAR, MIN_LENGTH_12],
+    showErrorMessage: false,
+    autoCapitalize: AutoCapitalize.none,
+    secureTextEntry: true,
+  },
+];
 
 export interface StoreState {
   authCTATitle: AuthRoutes;
   setAuthCTATitle: (authCTATitle: AuthRoutes) => void;
   isAuthBgCol: boolean;
   setIsAuthBgCol: (isAuthBgCol: boolean) => void;
-  authForm: AuthSignupForm;
-  setAuthForm: (authForm: AuthSignupForm) => void;
+  authForm: ErrorStateValue[];
+  setAuthForm: (authForm: ErrorStateValue[]) => void;
 }
 
 export const useStore = create<StoreState | any>((set, get) => ({
@@ -27,7 +73,7 @@ export const useStore = create<StoreState | any>((set, get) => ({
   isAuthBgCol: false,
   setIsAuthBgCol: (isAuthBgCol: boolean) => set(() => ({ isAuthBgCol })),
   authForm: AUTH_FORM,
-  setAuthForm: (authForm: AuthSignupForm) => set(() => ({ authForm })),
+  setAuthForm: (authForm: ErrorStateValue[]) => set(() => ({ authForm })),
 }));
 
 function useAsyncState<T>(initialValue: [boolean, T | null] = [true, null]): UseStateHook<T> {

@@ -7,10 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
 import { AUTH_FORM, StoreState, useStore } from '@/store/store';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { COLORS } from '@/costants/colors';
 import { SHADOW } from '@/costants/styles';
 import { AuthRoutes } from '@/types';
+import { isRegExValid } from '@/utils/isRegexValid';
 
 const videoSource = require('../assets/videos/Fuzz.mp4');
 
@@ -33,8 +34,34 @@ function RootNavigator() {
 
   const isReversed = useRef(false);
 
+  const isLogin = useMemo(() => authCTATitle === AuthRoutes.LOGIN, [authCTATitle]);
+  const fieldsToValidate = useMemo(
+    () => (isLogin ? [authForm[1], authForm[3]] : authForm),
+    [isLogin, authForm],
+  ); // Only use username and password for when validating login. See order in store.ts.
+
   const navigateToAuth = () => {
     router.navigate('/auth');
+  };
+
+  const isFormValidHandler = (): boolean => {
+    for (const field of fieldsToValidate) {
+      console.log('field', field.value);
+      const isFieldValid = field.validator.every((validator) =>
+        isRegExValid(field.value, validator),
+      );
+
+      if (!isFieldValid) {
+        console.log(`${field.id} validation failed:`, field.value);
+
+        return false;
+      }
+
+      console.log(`${field.id} validation passed:`, field.value);
+    }
+
+    console.log('All form fields are valid');
+    return true;
   };
 
   const authBtnHandler = () => {
@@ -42,13 +69,14 @@ function RootNavigator() {
       navigateToAuth();
       setIsAuthBgCol(false);
     } else {
-      if (authCTATitle === 'Login') {
-        console.log('Log in', authForm);
+      const isValid = isFormValidHandler();
+
+      if (isValid) {
+        console.log('Form is valid, proceeding with authentication...');
+        // TODO: Add actual authentication logic here
       }
 
-      if (authCTATitle === 'Sign up') {
-        console.log('sign up', authForm);
-      }
+      console.log('islogin', isLogin);
     }
   };
 

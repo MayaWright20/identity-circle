@@ -5,18 +5,13 @@ import Octicons from '@expo/vector-icons/Octicons';
 import { COLORS } from '@/costants/colors';
 import { PADDING } from '@/costants/styles';
 import { useState } from 'react';
-
-export enum AutoCapitalize {
-  none = 'none',
-  sentences = 'sentences',
-  words = 'words',
-  characters = 'characters',
-}
+import { AutoCapitalize } from '@/types';
 
 interface Props {
   backgroundColor?: string;
   color?: string;
   label: string;
+  value?: string;
   onChangeText: (input: string) => void;
   autoCapitalize?: AutoCapitalize;
   secureTextEntry?: boolean;
@@ -28,6 +23,7 @@ export default function TextInputComponent({
   backgroundColor = COLORS.PINK_0,
   color = 'white',
   label,
+  value,
   onChangeText,
   autoCapitalize,
   secureTextEntry,
@@ -37,12 +33,17 @@ export default function TextInputComponent({
   const [showSecureText, setShowSecureText] = useState(true);
 
   const onChangeTextHandler = (input: string) => {
-    onChangeText(input);
+    onChangeText(input.trim());
   };
 
   const toggleSecureText = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setShowSecureText((prev) => !prev);
+    if (showSecureText) {
+      setShowSecureText((prev) => !prev);
+      setTimeout(() => {
+        setShowSecureText((prev) => !prev);
+      }, 5000);
+    }
   };
 
   return (
@@ -62,16 +63,15 @@ export default function TextInputComponent({
           )}
         </Pressable>
         <TextInput
+          value={value}
           onChangeText={onChangeTextHandler}
-          style={[styles.textInput, { color: backgroundColor }]}
+          style={[styles.textInput, { color }]}
           autoCapitalize={autoCapitalize}
           secureTextEntry={secureTextEntry && showSecureText}
           cursorColor={backgroundColor}
         />
       </View>
-      {showErrorMessage && (
-        <Text style={[styles.errorLabel, { color: backgroundColor }]}>{errorMessage}</Text>
-      )}
+      {showErrorMessage && <Text style={[styles.errorLabel, { color }]}>asdf{errorMessage}</Text>}
     </>
   );
 }
