@@ -65,6 +65,8 @@ export interface StoreState {
   setIsAuthBgCol: (isAuthBgCol: boolean) => void;
   authForm: ErrorStateValue[];
   setAuthForm: (authForm: ErrorStateValue[]) => void;
+  updateAuthFormField: (fieldId: string, value: string) => void;
+  resetAuthForm: () => void;
 }
 
 export const useStore = create<StoreState | any>((set, get) => ({
@@ -74,6 +76,20 @@ export const useStore = create<StoreState | any>((set, get) => ({
   setIsAuthBgCol: (isAuthBgCol: boolean) => set(() => ({ isAuthBgCol })),
   authForm: AUTH_FORM,
   setAuthForm: (authForm: ErrorStateValue[]) => set(() => ({ authForm })),
+  updateAuthFormField: (fieldId: string, value: string) =>
+    set((state: { authForm: ErrorStateValue[] }) => ({
+      authForm: state.authForm.map((field: ErrorStateValue) =>
+        field.id === fieldId ? { ...field, value, showErrorMessage: false } : field,
+      ),
+    })),
+  resetAuthForm: () =>
+    set(() => ({
+      authForm: AUTH_FORM.map((field) => ({
+        ...field,
+        value: '',
+        showErrorMessage: false,
+      })),
+    })),
 }));
 
 function useAsyncState<T>(initialValue: [boolean, T | null] = [true, null]): UseStateHook<T> {

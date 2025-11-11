@@ -8,7 +8,8 @@ import TextInputComponent from '@/components/inputs/text-input';
 
 import { COLORS } from '@/costants/colors';
 import { AUTH_FORM, StoreState, useStore } from '@/store/store';
-import { AuthRoutes, ErrorStateValue } from '@/types';
+import { AuthRoutes } from '@/types';
+import useAuthForm from '@/hooks/useAuthForm';
 
 // import { useSession } from '../ctx';
 
@@ -20,16 +21,7 @@ export default function SignIn() {
   const authForm = useStore((state: StoreState) => state.authForm);
   const setAuthForm = useStore((state: StoreState) => state.setAuthForm);
 
-  const resetForm = () => {
-    const updatedForm = authForm.map((field) => {
-      return {
-        ...field,
-        value: '',
-        showErrorMessage: false,
-      };
-    });
-    setAuthForm(updatedForm);
-  };
+  const { resetForm, updateFormHandler } = useAuthForm();
 
   const backCta = () => {
     setAuthCTATitle(AuthRoutes.SING_UP);
@@ -38,23 +30,9 @@ export default function SignIn() {
     router.navigate('/');
   };
 
-  const updateFormHandler = (item: ErrorStateValue, value: string) => {
-    const updatedForm = authForm.map((field) => {
-      if (field.id === item.id) {
-        return {
-          ...field,
-          value: value,
-          showErrorMessage: false,
-        };
-      }
-      return field;
-    });
-    setAuthForm(updatedForm);
-  };
-
   useEffect(() => {
     setIsAuthBgCol(true);
-  }, [setAuthCTATitle, setIsAuthBgCol]);
+  }, [setIsAuthBgCol]);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
