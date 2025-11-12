@@ -47,7 +47,7 @@ export default function SignIn() {
                 autoCapitalize={item.autoCapitalize}
                 value={formField?.value || ''}
                 onChangeText={(value) => {
-                  updateAuthFormField(item.id, value);
+                  updateAuthFormField(item.id, value, false);
                 }}
                 key={index}
                 color={COLORS.RED_0}

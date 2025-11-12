@@ -40,10 +40,17 @@ export const signUp = asyncError(async (req, res, next) => {
   const { name, email, password, username, phone } = req.body;
 
   let user = await User.findOne({
-    $or: [{ email: email || username }, { username: email || username }],
+    $or: [{ email: email }, { username: username }],
   });
 
-  if (user) return next(new ErrorHandler("User already exists", 400));
+  let usernameTaken = await User.findOne({ username: username });
+  if (usernameTaken)
+    return next(new ErrorHandler("Username taken", 400, "username"));
+
+  let emailTaken = await User.findOne({ email: email });
+  if (emailTaken) return next(new ErrorHandler("Email taken", 400, "email"));
+
+  if (user) return next(new ErrorHandler("User already signed in", 400));
 
   user = await User.create({ name, email, password, username, phone });
 

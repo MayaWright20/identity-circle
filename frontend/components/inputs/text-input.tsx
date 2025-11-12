@@ -6,6 +6,7 @@ import { COLORS } from '@/costants/colors';
 import { PADDING } from '@/costants/styles';
 import { useCallback, useState } from 'react';
 import { AutoCapitalize } from '@/types';
+import { stringToCapitalize } from '@/utils/stringHelpers';
 
 interface Props {
   backgroundColor?: string;
@@ -81,7 +82,9 @@ export default function TextInputComponent({
           cursorColor={backgroundColor}
         />
       </View>
-      {showErrorMessage && <Text style={[styles.errorLabel, { color }]}>{errorMessage}</Text>}
+      {showErrorMessage && (
+        <Text style={[styles.errorLabel, { color }]}>{stringToCapitalize(`${errorMessage}`)}</Text>
+      )}
     </>
   );
 }
@@ -116,7 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'right',
     marginRight: 20,
-    textTransform: 'capitalize',
     marginBottom: 2,
   },
   textInput: {

@@ -65,7 +65,12 @@ export interface StoreState {
   setIsAuthBgCol: (isAuthBgCol: boolean) => void;
   authForm: ErrorStateValue[];
   setAuthForm: (authForm: ErrorStateValue[]) => void;
-  updateAuthFormField: (fieldId: string, value: string) => void;
+  updateAuthFormField: (
+    fieldId: string,
+    value?: string,
+    showErrorMessage?: boolean,
+    errorMessage?: string,
+  ) => void;
   resetAuthForm: () => void;
 }
 
@@ -84,7 +89,14 @@ export const useStore = create<StoreState | any>((set, get) => ({
   ) =>
     set((state: { authForm: ErrorStateValue[] }) => ({
       authForm: state.authForm.map((field: ErrorStateValue) =>
-        field.id === fieldId ? { ...field, value, showErrorMessage, errorMessage } : field,
+        field.id === fieldId
+          ? {
+              ...field,
+              ...(value !== undefined && { value }),
+              ...(showErrorMessage !== undefined && { showErrorMessage }),
+              ...(errorMessage !== undefined && { errorMessage }),
+            }
+          : field,
       ),
     })),
   resetAuthForm: () =>
