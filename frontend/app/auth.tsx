@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CTA from '@/components/buttons/cta';
 import TextInputComponent from '@/components/inputs/text-input';
 
-import { COLORS } from '@/costants/colors';
+import { COLORS } from '@/constants/colors';
 import { AUTH_FORM, StoreState, useStore } from '@/store/store';
 import { AuthRoutes } from '@/types';
 

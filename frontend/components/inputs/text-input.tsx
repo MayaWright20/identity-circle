@@ -2,8 +2,8 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Octicons from '@expo/vector-icons/Octicons';
 
-import { COLORS } from '@/costants/colors';
-import { PADDING } from '@/costants/styles';
+import { COLORS } from '@/constants/colors';
+import { PADDING } from '@/constants/styles';
 import { useCallback, useState } from 'react';
 import { AutoCapitalize } from '@/types';
 import { stringToCapitalize } from '@/utils/stringHelpers';

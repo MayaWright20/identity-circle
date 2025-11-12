@@ -1,4 +1,4 @@
-export const EMAIL_VALIDATOR = /^[A-Za-z]+@[A-Za-z]+\.[A-Za-z]+$/;
+export const EMAIL_VALIDATOR = /^[A-Za-z0-9._-]+@[A-Za-z]+\.[A-Za-z]+$/;
 
 export const PHONE_VALIDATOR =
   /^\+?[0-9]{1,3}?[\s-]?\(?[0-9]{2,4}\)?[\s-]?[0-9]{3,4}[\s-]?[0-9]{3,4}$/;

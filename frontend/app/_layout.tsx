@@ -1,16 +1,16 @@
 import { router, Stack } from 'expo-router';
-import axios from 'axios';
-
-// import { SessionProvider } from '../ctx';
-import { SplashScreenController } from '@/components/splash-screen';
-import CTA from '@/components/buttons/cta';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
-import { AUTH_FORM, StoreState, useStore } from '@/store/store';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useMemo, useRef } from 'react';
-import { COLORS } from '@/costants/colors';
-import { SHADOW } from '@/costants/styles';
+
+import useProfile from '@/hooks/useProfile';
+import CTA from '@/components/buttons/cta';
+
+import { SplashScreenController } from '@/components/splash-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { AUTH_FORM, StoreState, usePersistStore, useStore } from '@/store/store';
+import { COLORS } from '@/constants/colors';
+import { SHADOW } from '@/constants/styles';
 import { AuthRoutes, FormData } from '@/types';
 import { isRegExValid, regexErrorMessage } from '@/utils/regex';
 
@@ -34,11 +34,15 @@ function RootNavigator() {
   const setAuthForm = useStore((state: StoreState) => state.setAuthForm);
   const updateAuthFormField = useStore((state: StoreState) => state.updateAuthFormField);
 
+  const sessionToken = usePersistStore((state: any) => state.sessionToken);
+
+  const { signUp, login } = useProfile();
+
   const isReversed = useRef(false);
 
   const isLogin = useMemo(() => authCTATitle === AuthRoutes.LOGIN, [authCTATitle]);
-  // fieldsToValidate uses username and password for when validating login. See order in store.ts.
   const fieldsToValidate = useMemo(
+    // fieldsToValidate uses username and password for when validating login. See order in store.ts.
     () => (isLogin ? [authForm[1], authForm[3]] : authForm),
     [isLogin, authForm],
   );
@@ -47,7 +51,7 @@ function RootNavigator() {
     router.navigate('/auth');
   };
 
-  const isFormValidHandler = (): boolean => {
+  const isFormValid = (): boolean => {
     let failedValidator: RegExp | null = null;
     for (const field of fieldsToValidate) {
       failedValidator =
@@ -66,79 +70,30 @@ function RootNavigator() {
     return true;
   };
 
-  //  "GET /",
-  //     "POST /user/signup",
-  //     "POST /user/login",
-  //     "GET /user/profile",
-  //     "GET /user/logout",
-  //     "DELETE /user/delete",
-  //     "POST /api/v1/user/signup",
-  //     "POST /api/v1/user/login",
-  //     "GET /api/v1/user/profile",
-  //     "GET /api/v1/user/logout",
-  //     "DELETE /api/v1/user/delete",
-
-  const signUp = async (formData: FormData) => {
-    try {
-      const response = await axios.post(`${process.env.EXPO_PUBLIC_URL}/user/signup`, formData);
-
-      if (response.data.success) {
-        console.log('Token received:', response.data.token);
-        // set token
-        // go to profile
-      }
-    } catch (err: any) {
-      updateAuthFormField(
-        isLogin ? 'password' : err.response.data.id,
-        undefined,
-        true,
-        err.response?.data?.message,
-      );
-    }
-  };
-
-  const login = async (formData: FormData) => {
-    console.log('formData', formData);
-    try {
-      await axios.post(`${process.env.EXPO_PUBLIC_URL}/user/login`, formData);
-    } catch (err) {
-      console.log('login err', err);
-    }
-  };
-
   const getAuthFormData = () => {
-    console.log('getAuthFormData called, authForm:', authForm);
     const formData: FormData = {};
+
     authForm.map((item) => {
       formData[item.id] = item.value;
-      console.log('item', item.id, item.value);
     });
-    console.log('Constructed formData:', formData);
+
     return formData;
   };
 
-  const authBtnHandler = () => {
-    console.log('authBtnHandler called, isAuthBgCol:', isAuthBgCol);
+  const authBtnHandler = async () => {
     if (!isAuthBgCol) {
       navigateToAuth();
       setIsAuthBgCol(false);
     } else {
-      const isValid = isFormValidHandler();
-      console.log('Form validation result:', isValid);
-
-      if (isValid) {
+      if (isFormValid()) {
         const formData = getAuthFormData();
-        console.log('Final formData:', formData);
 
         if (isLogin) {
           login(formData);
         } else {
-          signUp(formData);
+          signUp(formData, isLogin);
         }
       }
-      // else {
-      //   signUp();
-      // }
     }
   };
 
@@ -179,7 +134,7 @@ function RootNavigator() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={true}>
+        <Stack.Protected guard={!sessionToken}>
           <Stack.Screen
             name="index"
             options={{
@@ -195,11 +150,11 @@ function RootNavigator() {
             }}
           />
         </Stack.Protected>
-        <Stack.Protected guard={false}>
+        <Stack.Protected guard={!!sessionToken}>
           <Stack.Screen name="(app)" />
         </Stack.Protected>
       </Stack>
-      {!isAuthBgCol && (
+      {!isAuthBgCol && !sessionToken && (
         <>
           <VideoView
             style={styles.pictureContainer}
@@ -216,13 +171,15 @@ function RootNavigator() {
           </SafeAreaView>
         </>
       )}
-      <SafeAreaView
-        style={[
-          styles.authBtnSafeAreaView,
-          { backgroundColor: isAuthBgCol ? COLORS.CREAM_0 : undefined },
-        ]}>
-        <CTA style={!isAuthBgCol && styles.cta} onPress={authBtnHandler} title={authCTATitle} />
-      </SafeAreaView>
+      {!sessionToken && (
+        <SafeAreaView
+          style={[
+            styles.authBtnSafeAreaView,
+            { backgroundColor: isAuthBgCol ? COLORS.CREAM_0 : undefined },
+          ]}>
+          <CTA style={!isAuthBgCol && styles.cta} onPress={authBtnHandler} title={authCTATitle} />
+        </SafeAreaView>
+      )}
     </>
   );
 }

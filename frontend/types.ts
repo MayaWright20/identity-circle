@@ -1,6 +1,5 @@
-export const AUTH_ROUTE = 'AUTH_ROUTE';
-
 export type FormData = Record<string, string>;
+export type UseStateHook<T> = [string, (value: T | null) => void];
 
 export enum AutoCapitalize {
   none = 'none',
@@ -26,4 +25,9 @@ export interface ErrorStateValue extends TextInput {
 export enum AuthRoutes {
   LOGIN = 'Login',
   SING_UP = 'Sign up',
+}
+
+export enum Storage {
+  SESSION = 'session',
+  APP_NAME = 'identity-circle',
 }

@@ -1,8 +1,8 @@
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
-import { COLORS } from '@/costants/colors';
-import { PADDING } from '@/costants/styles';
+import { COLORS } from '@/constants/colors';
+import { PADDING } from '@/constants/styles';
 
 interface Props {
   title: string;

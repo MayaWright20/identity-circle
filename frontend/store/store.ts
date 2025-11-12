@@ -1,8 +1,10 @@
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { useEffect, useCallback, useReducer } from 'react';
-import * as SecureStore from 'expo-secure-store';
+// import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { AuthRoutes, AutoCapitalize, ErrorStateValue } from '@/types';
+import { AuthRoutes, AutoCapitalize, ErrorStateValue, UseStateHook } from '@/types';
 
 import {
   EMAIL_VALIDATOR,
@@ -13,9 +15,7 @@ import {
   MIN_LENGTH_12,
   NAME_VALIDATOR,
   USER_NAME_VALIDATOR,
-} from '@/costants/regex';
-
-type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
+} from '@/constants/regex';
 
 // Order of AUTH_FORM cannot change see _layout.tsx fieldsToValidate function
 export const AUTH_FORM: ErrorStateValue[] = [
@@ -109,37 +109,31 @@ export const useStore = create<StoreState | any>((set, get) => ({
     })),
 }));
 
-function useAsyncState<T>(initialValue: [boolean, T | null] = [true, null]): UseStateHook<T> {
-  return useReducer(
-    (state: [boolean, T | null], action: T | null = null): [boolean, T | null] => [false, action],
-    initialValue,
-  ) as UseStateHook<T>;
-}
+const sessionStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    const data = (await AsyncStorage.getItem(name)) || null;
+    return data;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await AsyncStorage.setItem(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await AsyncStorage.removeItem(name);
+  },
+  clearStore: async (): Promise<void> => {
+    await AsyncStorage.clear();
+  },
+};
 
-export async function setStorageItemAsync(key: string, value: any) {
-  if (value == null) {
-    await SecureStore.deleteItemAsync(key);
-  } else {
-    await SecureStore.setItemAsync(key, value);
-  }
-}
-
-export function useStorageState(key: string): UseStateHook<string> {
-  const [storage, setStorage] = useAsyncState<string>();
-
-  useEffect(() => {
-    SecureStore.getItemAsync(key).then((value: any) => {
-      setStorage(value);
-    });
-  }, [key, setStorage]);
-
-  const setStorageHandler = useCallback(
-    (value: any) => {
-      setStorage(value);
-      setStorageItemAsync(key, value);
+export const usePersistStore = create()(
+  persist(
+    (set, get) => ({
+      sessionToken: null,
+      setSessionToken: (sessionToken: null | string) => set({ sessionToken }),
+    }),
+    {
+      name: 'session',
+      storage: createJSONStorage(() => sessionStorage),
     },
-    [key, setStorage],
-  );
-
-  return [storage, setStorageHandler];
-}
+  ),
+);

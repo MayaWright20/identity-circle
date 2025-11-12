@@ -7,7 +7,7 @@ import {
   HAS_NUMBER,
   HAS_SPECIAL_CHAR,
   MIN_LENGTH_12,
-} from '@/costants/regex';
+} from '@/constants/regex';
 
 export const isRegExValid = (value: string, regex: RegExp) => regex.test(value);
 
