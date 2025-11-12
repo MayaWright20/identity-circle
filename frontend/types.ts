@@ -1,5 +1,7 @@
 export const AUTH_ROUTE = 'AUTH_ROUTE';
 
+export type FormData = Record<string, string>;
+
 export enum AutoCapitalize {
   none = 'none',
   sentences = 'sentences',

@@ -11,7 +11,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useMemo, useRef } from 'react';
 import { COLORS } from '@/costants/colors';
 import { SHADOW } from '@/costants/styles';
-import { AuthRoutes } from '@/types';
+import { AuthRoutes, FormData } from '@/types';
 import { isRegExValid, regexErrorMessage } from '@/utils/regex';
 
 const videoSource = require('../assets/videos/Fuzz.mp4');
@@ -77,33 +77,23 @@ function RootNavigator() {
   //     "GET /api/v1/user/profile",
   //     "GET /api/v1/user/logout",
   //     "DELETE /api/v1/user/delete",
-  type FormData = Record<string, string>;
-  const signUp = async (formData: FormData) => {
-    console.log('=== SIGNUP REQUEST DEBUG ===');
-    console.log('URL:', `${process.env.EXPO_PUBLIC_URL}/user/signup`);
-    console.log('FormData being sent:', JSON.stringify(formData, null, 2));
 
+  const signUp = async (formData: FormData) => {
     try {
       const response = await axios.post(`${process.env.EXPO_PUBLIC_URL}/user/signup`, formData);
-      console.log('=== SIGNUP SUCCESS ===');
-      console.log('Response:', response.data);
+
       if (response.data.success) {
         console.log('Token received:', response.data.token);
         // set token
         // go to profile
       }
     } catch (err: any) {
-      // Show the actual validation errors from backend
-      // if (err.response?.data?.message) {
-      console.log('err.response.data.message.id', err.response.data.message.id);
       updateAuthFormField(
         isLogin ? 'password' : err.response.data.id,
         undefined,
         true,
         err.response?.data?.message,
       );
-      console.log('Validation errors:', err.response.data.message);
-      // }
     }
   };
 
@@ -137,8 +127,6 @@ function RootNavigator() {
       console.log('Form validation result:', isValid);
 
       if (isValid) {
-        // Login || Sign up
-        // login();
         const formData = getAuthFormData();
         console.log('Final formData:', formData);
 
